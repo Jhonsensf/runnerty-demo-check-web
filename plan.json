@@ -1,0 +1,52 @@
+{
+  "chains":[
+    {
+      "id": "CHECK_MY_WEB_CHAIN",
+      "name": "This chain executes a process which check if my web is online each  5 minutes",
+      "triggers":[
+        {
+          "id":"schedule_dafault",
+          "schedule_interval":"*/5 * * * *"
+        }
+      ],
+      "processes":[
+        {
+          "id": "CHECK_GOOGLE",
+          "name": "This is the process which checks if google is online",
+          "depends_process": [],
+          "exec": {
+            "id": "check_online_service_default",  
+            "hostname": "http://www.google.com",
+            "check_contains": "gooogle"
+          },
+          "chain_action_on_fail": {
+              "action": "end"
+            },
+          "retries": 1,
+          "retry_delay": 30000,
+          "notificate_only_last_fail":true,
+          "output":[
+            {
+              "file_name":"./test.log",
+              "write":["EXECUTION @GETVALUE(PROCESS_ID) - AT @GETDATE('YYYY-MM-DD HH:mm:ss')\n"],
+              "concat":true,
+              "maxsize":"10mb"
+            }
+          ],
+          "notifications":{
+            "on_start":[],
+            "on_fail":[
+              {
+                "id": "console_default",
+                "mode": "error",
+                "message": "www.google.com is offline!"
+              }
+            ],
+            "on_retry":[],
+            "on_end":[]
+          }
+        }
+      ]
+    }
+  ]
+}
