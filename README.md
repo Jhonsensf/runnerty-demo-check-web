@@ -29,5 +29,5 @@ runnerty
 
 Force Run
 ```
-run -f CHECK_MY_WEB_CHAIN
+runnerty -f CHECK_MY_WEB_CHAIN
 ```
